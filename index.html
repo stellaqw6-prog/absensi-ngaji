@@ -228,7 +228,7 @@ img{max-width:100%}
 .nav-item:hover{background:var(--bg3);color:var(--text2)}
 .nav-item.active{color:#fff;box-shadow:0 4px 16px rgba(5,150,105,.25)}
 .nav-item .nav-icon{font-size:17px;flex-shrink:0;width:22px;text-align:center}
-.sidebar-footer{padding:10px 8px;padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));border-top:1px solid var(--border);flex-shrink:0}
+.sidebar-footer{padding:10px 8px;padding-bottom:calc(16px + env(safe-area-inset-bottom, 0px));border-top:1px solid var(--border);flex-shrink:0;overflow:visible;position:relative;z-index:10}
 .sidebar-footer .nav-item{font-size:13px}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;backdrop-filter:blur(4px)}
 
@@ -494,7 +494,7 @@ input[type="text"],input[type="email"],input[type="password"],input[type="number
 @media(max-width:767px) {
   .sidebar { height: 100dvh; height: 100vh; }
   .sidebar-footer { 
-    padding-bottom: max(10px, env(safe-area-inset-bottom)); 
+    padding-bottom: max(16px, env(safe-area-inset-bottom)); 
     flex-shrink: 0;
   }
   .sidebar-nav { 
@@ -718,9 +718,8 @@ input[type="text"],input[type="email"],input[type="password"],input[type="number
         <div class="form-group">
           <label class="form-label">KELAS NGAJI</label>
           <select class="form-select" id="reg-kelas">
-            <option>Kelas A (Iqra)</option>
-            <option>Kelas B (Al-Qur'an)</option>
-            <option>Kelas C (Hafidz)</option>
+            <option>Jilid 1-3</option>
+            <option>Jilid 4-7</option>
           </select>
         </div>
       </div>
@@ -1137,7 +1136,7 @@ async function publishPageToFirebase() {
     }
 
     if (currentPage === "absensi_kelas") {
-      var kelas = window._selectedKelas || "Kelas A";
+      var kelas = window._selectedKelas || "Jilid 1-3";
       var santriKelas = DEMO_SANTRI.filter(function(s){return s.kelas===kelas;});
       var tanggal = today();
       santriKelas.forEach(function(s){
@@ -1180,9 +1179,8 @@ async function publishPageToFirebase() {
     if (currentPage === "statistik" || currentPage === "ranking") {
       var summary = {
         totalSantri: DEMO_SANTRI.length,
-        kelasA: DEMO_SANTRI.filter(function(s){return s.kelas==="Kelas A";}).length,
-        kelasB: DEMO_SANTRI.filter(function(s){return s.kelas==="Kelas B";}).length,
-        kelasC: DEMO_SANTRI.filter(function(s){return s.kelas==="Kelas C";}).length,
+        jilid13: DEMO_SANTRI.filter(function(s){return s.kelas==="Jilid 1-3";}).length,
+        jilid47: DEMO_SANTRI.filter(function(s){return s.kelas==="Jilid 4-7";}).length,
         hadirHariIni: DEMO_ABSENSI_KELAS.filter(function(a){return a.status==="hadir"&&a.tanggal===today();}).length,
         publishedAt: Date.now()
       };
@@ -1324,7 +1322,7 @@ async function doRegister() {
   if (role === "wali") {
     namaSantri = ($("reg-nama-santri")||{value:""}).value.trim();
     umur       = ($("reg-umur")||{value:""}).value;
-    kelas      = ($("reg-kelas")||{value:"Kelas A"}).value;
+    kelas      = ($("reg-kelas")||{value:"Jilid 1-3"}).value;
     if (!namaSantri||!umur) { toast("Nama dan umur santri wajib diisi!", "error"); return; }
   } else {
     mapel = ($("reg-mapel")||{value:""}).value.trim();
@@ -1634,7 +1632,12 @@ function renderDashWali() {
 }
 
 function renderDashPengajar() {
-  const [sA,sB,sC] = ["Kelas A","Kelas B","Kelas C"].map(k=>DEMO_SANTRI.filter(s=>s.kelas===k));
+  const allKelas = ["Jilid 1-3","Jilid 4-7"];
+  const assigned = currentUser && Array.isArray(currentUser.kelas) ? currentUser.kelas
+    : (currentUser && currentUser.kelas ? [currentUser.kelas] : []);
+  const kelasList = assigned.length > 0 ? allKelas.filter(k => assigned.indexOf(k) >= 0) : allKelas;
+  const [sA,sB] = ["Jilid 1-3","Jilid 4-7"].map(k=>DEMO_SANTRI.filter(s=>s.kelas===k));
+  const hadirHariIni = DEMO_ABSENSI_KELAS.filter(a=>a.status==="hadir"&&a.tanggal===today()&&kelasList.indexOf(a.kelas)>=0).length;
   return `
     <div class="greeting-card g-blue" style="margin-bottom:20px">
       <div class="gc-pattern"></div>
@@ -1648,11 +1651,11 @@ function renderDashPengajar() {
     </div>
     <div class="stats-grid">
       <div class="stat-card"><div class="sc-icon g-em">👥</div><div class="sc-val">${DEMO_SANTRI.length}</div><div class="sc-label">Total Santri</div><div class="sc-sub">semua kelas</div></div>
-      <div class="stat-card"><div class="sc-icon g-blue">✅</div><div class="sc-val">4</div><div class="sc-label">Hadir Hari Ini</div><div class="sc-sub">dari 6 santri</div></div>
-      <div class="stat-card"><div class="sc-icon g-gold">🏫</div><div class="sc-val">3</div><div class="sc-label">Kelas Aktif</div><div class="sc-sub">A, B, C</div></div>
+      <div class="stat-card"><div class="sc-icon g-blue">✅</div><div class="sc-val">${hadirHariIni}</div><div class="sc-label">Hadir Hari Ini</div><div class="sc-sub">dari absensi kelas</div></div>
+      <div class="stat-card"><div class="sc-icon g-gold">🏫</div><div class="sc-val">${kelasList.length}</div><div class="sc-label">Kelas Aktif</div><div class="sc-sub">${kelasList.join(" & ") || "Jilid 1-3 & 4-7"}</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
-      ${[["Kelas A",sA,"g-em"],["Kelas B",sB,"g-blue"],["Kelas C",sC,"g-purple"]].map(([k,ss,gc])=>`
+      ${[["Jilid 1-3",sA,"g-em"],["Jilid 4-7",sB,"g-blue"]].filter(([k])=>kelasList.indexOf(k)>=0||kelasList.length===0).map(([k,ss,gc])=>`
         <div class="panel">
           <div class="panel-header"><span class="panel-title">${k}</span><span class="badge badge-green">${ss.length} santri</span></div>
           <div class="panel-body" style="padding:12px">
@@ -1800,8 +1803,21 @@ async function submitAbsensiRumah() {
 var absensiKelasPublished = {};
 
 function renderAbsensiKelas() {
-  const kelas = ["Kelas A","Kelas B","Kelas C"];
-  const selectedKelas = window._selectedKelas || "Kelas A";
+  // Jika pengajar, hanya tampilkan kelas yang ditugaskan
+  const allKelas = ["Jilid 1-3","Jilid 4-7"];
+  let kelas = allKelas;
+  if (currentUser && currentUser.role === "pengajar") {
+    const assigned = Array.isArray(currentUser.kelas) ? currentUser.kelas : (currentUser.kelas ? [currentUser.kelas] : []);
+    if (assigned.length > 0) {
+      kelas = allKelas.filter(k => assigned.indexOf(k) >= 0);
+      if (kelas.length === 0) kelas = allKelas; // fallback jika belum diset
+    }
+  }
+  // Reset selectedKelas jika tidak ada di list kelas yang tersedia
+  if (window._selectedKelas && kelas.indexOf(window._selectedKelas) < 0) {
+    window._selectedKelas = kelas[0];
+  }
+  const selectedKelas = window._selectedKelas || kelas[0] || "Jilid 1-3";
   const tanggal = today();
   const publishKey = selectedKelas + "_" + tanggal;
   const isPublished = absensiKelasPublished[publishKey] || false;
@@ -1988,7 +2004,7 @@ async function hapusAbsenKelasHari(kelas, tanggal) {
 }
 
 async function publishAbsensiKelas() {
-  var kelas = window._selectedKelas || "Kelas A";
+  var kelas = window._selectedKelas || "Jilid 1-3";
   var tanggal = today();
   var publishKey = kelas + "_" + tanggal;
   var alreadySaved = DEMO_ABSENSI_KELAS.filter(function(a){ return a.kelas===kelas&&a.tanggal===tanggal; });
@@ -2057,7 +2073,7 @@ function setCatatanKelas(santriId, catatan) {
 }
 
 async function simpanAbsensiKelas() {
-  var kelas = window._selectedKelas || "Kelas A";
+  var kelas = window._selectedKelas || "Jilid 1-3";
   var santriKelas = DEMO_SANTRI.filter(function(s){return s.kelas===kelas;});
   var missing = santriKelas.filter(function(s){return !absensiKelasState[s.id]||!absensiKelasState[s.id].status;});
   if (missing.length>0) { toast("Status "+missing[0].nama+" belum diisi!", "warning"); return; }
@@ -2098,14 +2114,14 @@ function renderJadwal() {
   const selectedHari = window._selectedHari || "Semua";
   const kelasFilter = window._selectedKelasJadwal || "Semua";
   const isWali = currentUser.role === "wali";
-  const santriKelas = isWali ? (DEMO_SANTRI.find(s=>s.id===currentUser.santriId)?.kelas || "Kelas A") : null;
+  const santriKelas = isWali ? (DEMO_SANTRI.find(s=>s.id===currentUser.santriId)?.kelas || "Jilid 1-3") : null;
   let jadwal = santriKelas ? DEMO_JADWAL.filter(j=>j.kelas===santriKelas) : DEMO_JADWAL;
   if (selectedHari !== "Semua") jadwal = jadwal.filter(j=>j.hari===selectedHari);
   if (!isWali && kelasFilter !== "Semua") jadwal = jadwal.filter(j=>j.kelas===kelasFilter);
 
   return `
     <div class="tab-nav">${hariList.map(h=>`<button class="tab-btn ${h===selectedHari?"active g-em":""}" onclick="window._selectedHari='${h}';renderContent()">${h}</button>`).join("")}</div>
-    ${!isWali?`<div class="tab-nav">${["Semua","Kelas A","Kelas B","Kelas C"].map(k=>`<button class="tab-btn ${k===kelasFilter?"active g-blue":""}" onclick="window._selectedKelasJadwal='${k}';renderContent()">${k}</button>`).join("")}</div>`:""}
+    ${!isWali?`<div class="tab-nav">${["Semua","Jilid 1-3","Jilid 4-7"].map(k=>`<button class="tab-btn ${k===kelasFilter?"active g-blue":""}" onclick="window._selectedKelasJadwal='${k}';renderContent()">${k}</button>`).join("")}</div>`:""}
     ${jadwal.length===0?`<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">Tidak ada jadwal</div><div class="empty-sub">untuk ${selectedHari}${kelasFilter!=="Semua"?" · "+kelasFilter:""}</div></div>`:`
     <div class="jadwal-grid">
       ${jadwal.map(j=>`
@@ -2126,7 +2142,7 @@ function renderJadwal() {
 // STATISTIK
 // =====================================================================
 function renderStatistik() {
-  const statKelas = ["Kelas A","Kelas B","Kelas C"].map(k=>({
+  const statKelas = ["Jilid 1-3","Jilid 4-7"].map(k=>({
     kelas:k,
     total:DEMO_SANTRI.filter(s=>s.kelas===k).length,
     hadir:DEMO_ABSENSI_KELAS.filter(a=>{
@@ -2312,14 +2328,14 @@ function _infoRow(label, val) {
 }
 
 function _buildKelasOptions(selected) {
-  return ["Kelas A","Kelas B","Kelas C"].map(function(k){
+  return ["Jilid 1-3","Jilid 4-7"].map(function(k){
     return '<option value="'+k+'"'+(k===selected?" selected":"")+'>'+k+'</option>';
   }).join("");
 }
 
 function _buildKelasCheckboxes(selected, nameAttr) {
   var arr = Array.isArray(selected) ? selected : (selected ? [selected] : []);
-  return ["Kelas A","Kelas B","Kelas C"].map(function(k){
+  return ["Jilid 1-3","Jilid 4-7"].map(function(k){
     var chk = arr.indexOf(k) >= 0 ? "checked" : "";
     return '<label style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer">'
       + '<input type="checkbox" name="'+nameAttr+'" value="'+k+'" '+chk+' style="width:15px;height:15px;accent-color:var(--em2);cursor:pointer"/>'
@@ -2510,7 +2526,7 @@ function modalEditAkunWali(uid) {
   var santri = DEMO_SANTRI.find(function(s){ return s.waliId === uid; });
   var sNama  = santri ? santri.nama  : (w.santriNama  || "");
   var sUmur  = santri ? santri.umur  : (w.santriUmur  || "");
-  var sKelas = santri ? santri.kelas : (w.santriKelas || "Kelas A");
+  var sKelas = santri ? santri.kelas : (w.santriKelas || "Jilid 1-3");
 
   openModal("\u270f\ufe0f Edit Akun Wali \u2014 " + w.nama,
     '<div class="app-form">'
@@ -2554,7 +2570,7 @@ async function saveEditAkunWali(uid) {
   var status     = (document.getElementById("ew-status")       ||{value:"aktif"}).value;
   var santriNama = (document.getElementById("ew-santri-nama")  ||{value:""}).value.trim();
   var santriUmur = parseInt((document.getElementById("ew-santri-umur")||{value:"0"}).value)||0;
-  var santriKelas= (document.getElementById("ew-santri-kelas") ||{value:"Kelas A"}).value;
+  var santriKelas= (document.getElementById("ew-santri-kelas") ||{value:"Jilid 1-3"}).value;
   if (!nama || !email) { toast("Nama dan email wajib diisi!", "error"); return; }
 
   try {
@@ -2633,7 +2649,7 @@ function modalTambahAkunWali() {
     +   '<div class="form-group"><label class="form-label">UMUR SANTRI</label>'
     +     '<input type="number" class="form-input" id="nw-santri-umur" placeholder="7" min="4" max="20"/></div>'
     +   '<div class="form-group"><label class="form-label">KELAS NGAJI</label>'
-    +     '<select class="form-select" id="nw-santri-kelas"><option>Kelas A</option><option>Kelas B</option><option>Kelas C</option></select></div>'
+    +     '<select class="form-select" id="nw-santri-kelas"><option>Jilid 1-3</option><option>Jilid 4-7</option></select></div>'
     + '</div>'
     + '</div>',
     '<button onclick="saveTambahAkunWali()" style="width:100%;padding:13px;border-radius:12px;font-weight:800;font-size:14px;color:#fff;border:none;cursor:pointer;background:linear-gradient(135deg,#059669,#10b981)">\u2705 Tambah Akun Wali</button>'
@@ -2647,7 +2663,7 @@ async function saveTambahAkunWali() {
   var wa         = (document.getElementById("nw-wa")          ||{value:""}).value.trim();
   var santriNama = (document.getElementById("nw-santri-nama") ||{value:""}).value.trim();
   var santriUmur = parseInt((document.getElementById("nw-santri-umur")||{value:"0"}).value)||0;
-  var santriKelas= (document.getElementById("nw-santri-kelas")||{value:"Kelas A"}).value;
+  var santriKelas= (document.getElementById("nw-santri-kelas")||{value:"Jilid 1-3"}).value;
   if (!nama||!email||!pass||!wa||!santriNama||!santriUmur) {
     toast("Semua field wajib diisi!","error"); return;
   }
@@ -2987,7 +3003,7 @@ function renderSantri() {
     +     "style='padding:9px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:16px;font-family:var(--font);width:200px'/>"
     +   "<select onchange=\"window._filterKelas=this.value;renderContent()\" "
     +     "style='padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text);font-size:16px;font-family:var(--font)'>"
-    +     ["Semua","Kelas A","Kelas B","Kelas C"].map(function(k){
+    +     ["Semua","Jilid 1-3","Jilid 4-7"].map(function(k){
             return "<option"+(k===(filterKls||"Semua")?" selected":"")+">"+k+"</option>";
           }).join("")
     +   "</select>"
@@ -3128,7 +3144,7 @@ async function saveEditSantri(id) {
   if (sIdx < 0) return;
   var nama   = (document.getElementById("es-nama")       ||{value:""}).value.trim();
   var umur   = parseInt((document.getElementById("es-umur")||{value:"0"}).value)||0;
-  var kelas  = (document.getElementById("es-kelas")      ||{value:"Kelas A"}).value;
+  var kelas  = (document.getElementById("es-kelas")      ||{value:"Jilid 1-3"}).value;
   var status = (document.getElementById("es-status")     ||{value:"aktif"}).value;
   if (!nama) { toast("Nama santri wajib diisi!", "error"); return; }
 
@@ -3198,7 +3214,7 @@ function modalTambahSantri() {
     +   '<div class="form-group"><label class="form-label">UMUR</label>'
     +     '<input type="number" class="form-input" id="ts-umur" placeholder="7" min="4" max="20"/></div>'
     +   '<div class="form-group"><label class="form-label">KELAS NGAJI</label>'
-    +     '<select class="form-select" id="ts-kelas"><option>Kelas A</option><option>Kelas B</option><option>Kelas C</option></select></div>'
+    +     '<select class="form-select" id="ts-kelas"><option>Jilid 1-3</option><option>Jilid 4-7</option></select></div>'
     + '</div>'
     + _divider()
     + _sectionHeader("HUBUNGKAN KE AKUN WALI")
@@ -3215,7 +3231,7 @@ function modalTambahSantri() {
 async function saveTambahSantri() {
   var nama   = (document.getElementById("ts-nama") ||{value:""}).value.trim();
   var umur   = parseInt((document.getElementById("ts-umur")||{value:"0"}).value)||0;
-  var kelas  = (document.getElementById("ts-kelas")||{value:"Kelas A"}).value;
+  var kelas  = (document.getElementById("ts-kelas")||{value:"Jilid 1-3"}).value;
   var waliId = (document.getElementById("ts-wali-id")||{value:""}).value;
   if (!nama || !umur) { toast("Nama dan umur wajib diisi!","error"); return; }
   try {
@@ -3454,7 +3470,7 @@ function modalTambahJadwal() {
     '<div class="app-form">'
     +'<div class="form-group"><label class="form-label">NAMA PELAJARAN</label><input type="text" class="form-input" id="j-pelajaran" placeholder="Contoh: Tahfidz Juz 30"/></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
-    +'<div class="form-group"><label class="form-label">KELAS</label><select class="form-select" id="j-kelas"><option>Kelas A</option><option>Kelas B</option><option>Kelas C</option></select></div>'
+    +'<div class="form-group"><label class="form-label">KELAS</label><select class="form-select" id="j-kelas"><option>Jilid 1-3</option><option>Jilid 4-7</option></select></div>'
     +'<div class="form-group"><label class="form-label">HARI</label><select class="form-select" id="j-hari"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option></select></div>'
     +'</div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
@@ -3467,7 +3483,7 @@ function modalTambahJadwal() {
 async function saveTambahJadwal() {
   var pelajaran = ((document.getElementById("j-pelajaran")||{}).value||"").trim();
   if(!pelajaran){toast("Nama pelajaran wajib diisi!","error");return;}
-  var kelas=(document.getElementById("j-kelas")||{}).value||"Kelas A";
+  var kelas=(document.getElementById("j-kelas")||{}).value||"Jilid 1-3";
   var hari=(document.getElementById("j-hari")||{}).value||"Senin";
   var waktu=(document.getElementById("j-waktu")||{}).value||"15:30";
   var pengajar=(document.getElementById("j-pengajar")||{}).value||"Ustadz Ahmad";
@@ -3571,7 +3587,7 @@ function renderJadwal() {
   var selectedHari=window._selectedHari||"Semua";
   var kelasFilter=window._selectedKelasJadwal||"Semua";
   var isWali=currentUser.role==="wali";
-  var santriKelas=isWali?(DEMO_SANTRI.find(function(s){return s.id===currentUser.santriId;})||{kelas:"Kelas A"}).kelas:null;
+  var santriKelas=isWali?(DEMO_SANTRI.find(function(s){return s.id===currentUser.santriId;})||{kelas:"Jilid 1-3"}).kelas:null;
   var jadwal=santriKelas?DEMO_JADWAL.filter(function(j){return j.kelas===santriKelas;}):DEMO_JADWAL.slice();
   if(selectedHari!=="Semua") jadwal=jadwal.filter(function(j){return j.hari===selectedHari;});
   if(!isWali&&kelasFilter!=="Semua") jadwal=jadwal.filter(function(j){return j.kelas===kelasFilter;});
@@ -3581,7 +3597,7 @@ function renderJadwal() {
     +'<div class="tab-nav" style="margin:0;flex-wrap:wrap">'+hariList.map(function(h){return '<button class="tab-btn '+(h===selectedHari?"active g-em":"")+'" onclick="window._selectedHari=\''+h+'\';renderContent()">'+h+'</button>';}).join('')+'</div>'
     +(!isWali?'<button onclick="modalTambahJadwal()" style="padding:9px 16px;border-radius:10px;font-size:13px;font-weight:700;color:#fff;border:none;cursor:pointer;background:linear-gradient(135deg,#059669,#10b981);flex-shrink:0">+ Tambah Jadwal</button>':'')
     +'</div>'
-    +(!isWali?'<div class="tab-nav" style="margin-bottom:16px">'+["Semua","Kelas A","Kelas B","Kelas C"].map(function(k){return '<button class="tab-btn '+(k===kelasFilter?"active g-blue":"")+'" onclick="window._selectedKelasJadwal=\''+k+'\';renderContent()">'+k+'</button>';}).join('')+'</div>':'')
+    +(!isWali?'<div class="tab-nav" style="margin-bottom:16px">'+["Semua","Jilid 1-3","Jilid 4-7"].map(function(k){return '<button class="tab-btn '+(k===kelasFilter?"active g-blue":"")+'" onclick="window._selectedKelasJadwal=\''+k+'\';renderContent()">'+k+'</button>';}).join('')+'</div>':'')
     +(jadwal.length===0
       ?'<div style="text-align:center;padding:60px 20px"><div style="font-size:52px;margin-bottom:14px">&#x1F4C5;</div><div style="font-size:16px;font-weight:700;color:var(--text)">Tidak ada jadwal</div><div style="font-size:13px;color:var(--text3);margin-top:4px">untuk '+selectedHari+'</div></div>'
       :'<div class="jadwal-grid">'+jadwal.map(function(j){
@@ -3875,7 +3891,7 @@ function renderPrestasiPengajar() {
 
   // Filter kelas
   html += '<div class="tab-nav" style="margin-bottom:14px">'
-    + ["Semua","Kelas A","Kelas B","Kelas C"].map(function(k){
+    + ["Semua","Jilid 1-3","Jilid 4-7"].map(function(k){
         return '<button class="tab-btn' + (k===filterKelas?" active g-em":"") + '" onclick="window._pfKelas=\'' + k + '\';renderContent()">' + k + '</button>';
       }).join("") + '</div>';
 
@@ -3982,7 +3998,7 @@ function renderPrestasiAdmin() {
     + '</div>';
 
   html += '<div class="tab-nav" style="margin-bottom:14px">'
-    + ["Semua","Kelas A","Kelas B","Kelas C"].map(function(k){
+    + ["Semua","Jilid 1-3","Jilid 4-7"].map(function(k){
         return '<button class="tab-btn' + (k===filterKelas?" active g-em":"") + '" onclick="window._pfKelas=\'' + k + '\';renderContent()">' + k + '</button>';
       }).join("") + '</div>';
 
@@ -4271,7 +4287,7 @@ async function loadFirebaseData() {
       DEMO_SANTRI.length = 0;
       Object.keys(fbSantri).forEach(function(k){
         var s = fbSantri[k];
-        DEMO_SANTRI.push({id:k, nama:s.nama||s.name, umur:s.umur||0, kelas:s.kelas||"Kelas A", waliId:s.waliId||"", status:s.status||"aktif"});
+        DEMO_SANTRI.push({id:k, nama:s.nama||s.name, umur:s.umur||0, kelas:s.kelas||"Jilid 1-3", waliId:s.waliId||"", status:s.status||"aktif"});
       });
     }
     // Load jadwal
