@@ -267,7 +267,8 @@ img{max-width:100%}
 .panel-title{font-size:15px;font-weight:700;color:var(--text)}
 .panel-body{padding:20px}
 
-.tab-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.tab-nav{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap;padding-bottom:2px}
+.tab-nav::-webkit-scrollbar{display:none}
 .tab-btn{padding:9px 18px;border-radius:10px;font-size:13px;font-weight:600;transition:.2s;cursor:pointer;border:none;font-family:var(--font);white-space:nowrap;flex-shrink:0;min-width:fit-content}
 .tab-btn:not(.active){background:var(--bg2);border:1px solid var(--border);color:var(--text3)}
 .tab-btn:not(.active):hover{background:var(--bg3);color:var(--text2)}
@@ -485,7 +486,25 @@ input[type="text"],input[type="email"],input[type="password"],input[type="number
 @media(max-width:400px){
   .stats-grid{grid-template-columns:1fr}
   .toggle-group{flex-direction:column}
+  .logout-label{display:none}
 }
+.ann-banner{
+  width:100%;background:linear-gradient(90deg,#065f46,#059669,#0d9488,#059669,#065f46);
+  background-size:300% 100%;animation:annGrad 6s linear infinite;
+  padding:0;overflow:hidden;position:relative;flex-shrink:0;
+  border-bottom:2px solid rgba(255,255,255,.15);
+}
+.ann-banner.hidden-banner{display:none}
+@keyframes annGrad{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+.ann-track{display:flex;align-items:center;height:36px;white-space:nowrap;overflow:hidden;position:relative}
+.ann-scroll{display:inline-flex;align-items:center;gap:0;animation:annScroll linear infinite;will-change:transform}
+@keyframes annScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ann-item{display:inline-flex;align-items:center;gap:8px;padding:0 28px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+.ann-item .ann-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);flex-shrink:0}
+.ann-badge{font-size:10px;font-weight:800;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:1px 7px;color:#fff;letter-spacing:.5px;flex-shrink:0}
+.ann-close{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;transition:.2s}
+.ann-close:hover{background:rgba(255,255,255,.3)}
+.ann-empty{font-size:12px;color:rgba(255,255,255,.6);padding:0 16px;font-style:italic}
 
 /* ===== SIDEBAR MOBILE FIX ===== */
 @supports(height: 100dvh) {
@@ -771,18 +790,20 @@ input[type="text"],input[type="email"],input[type="password"],input[type="number
     <div class="user-chip g-em" id="user-chip">
       <div class="user-chip-inner">
         <div class="user-avatar" id="user-avatar">👤</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="user-name" id="user-display-name">—</div>
           <div class="user-role" id="user-display-role">—</div>
         </div>
+        <button onclick="doLogout()" title="Keluar"
+          style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:.2s"
+          onmouseover="this.style.background='rgba(239,68,68,.55)';this.style.borderColor='rgba(239,68,68,.7)'"
+          onmouseout="this.style.background='rgba(255,255,255,.18)';this.style.borderColor='rgba(255,255,255,.3)'">🚪</button>
       </div>
     </div>
     <nav class="sidebar-nav" id="sidebar-nav">
       <!-- populated by JS -->
     </nav>
     <div class="sidebar-footer">
-      <button class="nav-item" onclick="toggleDark()"><span class="nav-icon" id="dark-icon">🌙</span><span>Mode Gelap</span></button>
-      <button class="nav-item" onclick="doLogout()" style="color:#ef4444"><span class="nav-icon">🚪</span><span>Keluar</span></button>
     </div>
   </aside>
 
@@ -795,7 +816,24 @@ input[type="text"],input[type="email"],input[type="password"],input[type="number
       </div>
       <div class="topbar-right">
         <div class="live-badge"><div class="live-dot"></div>Realtime</div>
+        <button onclick="toggleDark()" title="Mode Gelap/Terang" id="dark-icon-topbar"
+          style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1.5px solid var(--border);color:var(--text2);font-size:17px;cursor:pointer;transition:.2s"
+          onmouseover="this.style.background='var(--em-light)';this.style.borderColor='var(--em2)'"
+          onmouseout="this.style.background='var(--bg3)';this.style.borderColor='var(--border)'">🌙</button>
+        <button onclick="doLogout()" title="Keluar"
+          style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.2);color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:var(--font)"
+          onmouseover="this.style.background='rgba(239,68,68,.15)';this.style.borderColor='rgba(239,68,68,.4)'"
+          onmouseout="this.style.background='rgba(239,68,68,.08)';this.style.borderColor='rgba(239,68,68,.2)'">
+          <span>🚪</span><span class="logout-label">Keluar</span>
+        </button>
       </div>
+    </div>
+    <!-- ANNOUNCEMENT BANNER -->
+    <div class="ann-banner hidden-banner" id="ann-banner">
+      <div class="ann-track">
+        <div class="ann-scroll" id="ann-scroll"><!-- JS fills this --></div>
+      </div>
+      <button class="ann-close" onclick="annDismiss()" title="Tutup">✕</button>
     </div>
     <div class="content" id="content">
       <!-- populated by JS -->
@@ -975,8 +1013,11 @@ function setLoading(btnId, loading, text) {
 function toggleDark() {
   isDark = !isDark;
   document.body.classList.toggle("dark", isDark);
-  $("dark-toggle") && ($("dark-toggle").textContent = isDark ? "☀️" : "🌙");
-  $("dark-icon") && ($("dark-icon").textContent = isDark ? "☀️" : "🌙");
+  var icons = ["dark-toggle","dark-icon-topbar"];
+  icons.forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.textContent = isDark ? "☀️" : "🌙";
+  });
   localStorage.setItem("dark", isDark ? "1" : "0");
 }
 
@@ -1370,6 +1411,8 @@ function loginSuccess() {
   navigate("dashboard");
   showPage("app");
   updateFabVisibility();
+  _annDismissed = false;
+  annRenderBanner();
 }
 
 async function doLogout() {
@@ -1574,7 +1617,7 @@ function renderDashWali() {
     </div>
     <div class="stats-grid">
       <div class="stat-card"><div class="sc-icon g-em">✅</div><div class="sc-val">${absensi.length}</div><div class="sc-label">Hadir Bulan Ini</div><div class="sc-sub">hari ngaji di rumah</div></div>
-      <div class="stat-card"><div class="sc-icon g-gold">⭐</div><div class="sc-val">88</div><div class="sc-label">Rata-rata Nilai</div><div class="sc-sub">nilai kelas</div></div>
+      <div class="stat-card"><div class="sc-icon g-gold">⭐</div><div class="sc-val">${(()=>{var nd=DEMO_ABSENSI_KELAS.filter(a=>a.santriId===santri.id&&a.nilai!=null).map(a=>a.nilai);return nd.length?Math.round(nd.reduce((s,v)=>s+v,0)/nd.length):"—";})()}</div><div class="sc-label">Rata-rata Nilai</div><div class="sc-sub">${DEMO_ABSENSI_KELAS.filter(a=>a.santriId===santri.id&&a.nilai!=null).length?'dari ustadz':'belum ada nilai'}</div></div>
     </div>
     <div class="panel" style="margin-bottom:16px">
       <div class="panel-header">
@@ -3620,43 +3663,199 @@ function renderJadwal() {
 // =====================================================================
 // KALENDER AKADEMIK
 // =====================================================================
-function renderKalender() {
-  var now=new Date();
-  var bulan=now.getMonth(); var tahun=now.getFullYear();
-  var namaBulan=new Date(tahun,bulan).toLocaleDateString("id-ID",{month:"long",year:"numeric"});
-  var hariPertama=new Date(tahun,bulan,1).getDay();
-  var totalHari=new Date(tahun,bulan+1,0).getDate();
-  var todayDate=now.getDate();
-  var events={5:"&#x1F4DD; Ujian Iqra",12:"&#x1F3C6; Lomba Hafalan",17:"&#x1F54C; Libur Nasional",20:"&#x1F4CA; Terima Raport",25:"&#x1F393; Wisuda Santri"};
-  var cells=Array(hariPertama).fill('<div></div>').join('');
-  for(var d=1;d<=totalHari;d++){
-    var isToday=d===todayDate;
-    var ev=events[d];
-    cells+='<div style="aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;'
-      +'background:'+(isToday?"linear-gradient(135deg,#059669,#10b981)":ev?"rgba(16,185,129,.12)":"var(--bg3)")+";"
-      +'border:'+(isToday?"2px solid #059669":ev?"1.5px solid rgba(16,185,129,.4)":"1px solid var(--border)")+";"
-      +'font-size:13px;font-weight:'+(isToday?"800":ev?"700":"500")+";"
-      +'color:'+(isToday?"#fff":ev?"var(--em-dark)":"var(--text3)")+";"
-      +'cursor:'+(ev?"pointer":"default")+';padding:4px;transition:.15s"'
-      +(ev?'onclick="toast(\''+ev.replace(/&#x[0-9A-F]+;/g,'')+' - Tgl '+d+' '+namaBulan+'\',\'info\')" title="'+ev.replace(/&[^;]+;/g,'')+'"':'')
-      +' onmouseover="this.style.transform=\'scale(1.08)\'" onmouseout="this.style.transform=\'scale(1)\'">'
-      +'<span>'+d+'</span>'+(ev?'<span style="font-size:8px;margin-top:1px">'+ev.split(" ")[0]+'</span>':'')+'</div>';
-  }
-  return '<div style="max-width:560px">'
-    +'<div class="panel" style="margin-bottom:16px"><div class="panel-header"><span class="panel-title">&#x1F4C5; Kalender Akademik &mdash; '+namaBulan+'</span></div>'
-    +'<div class="panel-body">'
-    +'<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">'+["Min","Sen","Sel","Rab","Kam","Jum","Sab"].map(function(h){return '<div style="text-align:center;font-size:11px;font-weight:700;color:var(--text4);padding:6px 0">'+h+'</div>';}).join('')+'</div>'
-    +'<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">'+cells+'</div></div></div>'
-    +'<div class="panel"><div class="panel-header"><span class="panel-title">&#x1F4CC; Event Bulan Ini</span></div>'
-    +'<div class="panel-body" style="padding:12px">'
-    +Object.entries(events).map(function(e){
-      return '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;background:var(--bg3);margin-bottom:8px">'
-        +'<div style="width:36px;height:36px;border-radius:10px;background:var(--em-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">'+e[1].split(" ")[0]+'</div>'
-        +'<div><div style="font-weight:700;font-size:13px;color:var(--text)">'+e[1].replace(/&#x[0-9A-F]+; /i,'')+'</div>'
-        +'<div style="font-size:11px;color:var(--text3)">Tanggal '+e[0]+' '+namaBulan+'</div></div>'
-        +'</div>';
-    }).join('')
+// =====================================================================
+// KALENDER - SISTEM EVENT DINAMIS
+// =====================================================================
+var KALENDER_EVENTS = {}; // format: { "YYYY-MM-DD": [{id, judul, icon}] }
+var _kalBulan = new Date().getMonth();
+var _kalTahun = new Date().getFullYear();
+
+function kalKey(tahun, bulan, tgl) {
+  return tahun+"-"+String(bulan+1).padStart(2,"0")+"-"+String(tgl).padStart(2,"0");
+}
+
+function kalSaveEvents() {
+  try { localStorage.setItem("kalender_events", JSON.stringify(KALENDER_EVENTS)); } catch(e){}
+}
+
+function kalLoadEvents() {
+  try {
+    var raw = localStorage.getItem("kalender_events");
+    if (raw) KALENDER_EVENTS = JSON.parse(raw);
+    // Seed default events jika belum ada sama sekali
+    if (Object.keys(KALENDER_EVENTS).length === 0) {
+      var y = new Date().getFullYear(), m = new Date().getMonth();
+      var seed = [[5,"📝","Ujian Iqra"],[12,"🏆","Lomba Hafalan"],[20,"📊","Terima Raport"],[25,"🎓","Wisuda Santri"]];
+      seed.forEach(function(s){
+        var k = kalKey(y, m, s[0]);
+        KALENDER_EVENTS[k] = [{id:Date.now()+s[0], judul:s[2], icon:s[1]}];
+      });
+      kalSaveEvents();
+    }
+  } catch(e) {}
+}
+
+function kalDeleteEvent(dateKey, eventId) {
+  if (!KALENDER_EVENTS[dateKey]) return;
+  KALENDER_EVENTS[dateKey] = KALENDER_EVENTS[dateKey].filter(function(e){ return e.id !== eventId; });
+  if (KALENDER_EVENTS[dateKey].length === 0) delete KALENDER_EVENTS[dateKey];
+  kalSaveEvents();
+  renderContent();
+}
+
+function kalShowAddModal(dateKey) {
+  var isAdmin = currentUser && (currentUser.role==="admin" || currentUser.role==="pengajar");
+  if (!isAdmin) return;
+  var icons = ["📝","🏆","🎓","📊","🕌","🎉","⚠️","📅","🌙","🔔","📖","🎯"];
+  var html = '<div class="modal-overlay" id="kalModal" onclick="if(event.target.id===\'kalModal\')closeKalModal()">'
+    +'<div class="modal animate-scaleIn" style="max-width:340px">'
+    +'<div class="modal-header"><span class="modal-title">➕ Tambah Event</span><button class="modal-close" onclick="closeKalModal()">✕</button></div>'
+    +'<div class="modal-body">'
+    +'<div class="form-group"><label class="form-label">TANGGAL</label>'
+    +'<input class="form-input" id="kal-tanggal" type="date" value="'+dateKey+'"/></div>'
+    +'<div class="form-group"><label class="form-label">NAMA EVENT</label>'
+    +'<input class="form-input" id="kal-judul" type="text" placeholder="Contoh: Ujian Iqra..." maxlength="40"/></div>'
+    +'<div class="form-group"><label class="form-label">IKON</label>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">'
+    +icons.map(function(ic){ return '<button type="button" class="icon-pick-btn" data-icon="'+ic+'" onclick="kalPickIcon(this)" style="width:38px;height:38px;border-radius:10px;font-size:20px;border:2px solid var(--border);background:var(--bg3);cursor:pointer;transition:.15s">'+ic+'</button>'; }).join('')
+    +'</div>'
+    +'<input type="hidden" id="kal-icon" value="📝"/>'
+    +'</div></div>'
+    +'<div class="modal-footer">'
+    +'<button class="btn-secondary" onclick="closeKalModal()">Batal</button>'
+    +'<button class="btn-primary" onclick="kalSaveEvent()">Simpan Event</button>'
     +'</div></div></div>';
+  var wrap = document.createElement("div");
+  wrap.id = "kal-modal-wrap";
+  wrap.innerHTML = html;
+  document.body.appendChild(wrap);
+  // Highlight default icon
+  setTimeout(function(){
+    var first = document.querySelector('.icon-pick-btn');
+    if(first) first.style.borderColor = 'var(--em)';
+  }, 50);
+}
+
+function kalPickIcon(btn) {
+  document.querySelectorAll('.icon-pick-btn').forEach(function(b){ b.style.borderColor='var(--border)'; b.style.background='var(--bg3)'; });
+  btn.style.borderColor = 'var(--em)';
+  btn.style.background = 'var(--em-light)';
+  document.getElementById('kal-icon').value = btn.dataset.icon;
+}
+
+function kalSaveEvent() {
+  var dateKey = document.getElementById('kal-tanggal').value;
+  var judul   = (document.getElementById('kal-judul').value||'').trim();
+  var icon    = document.getElementById('kal-icon').value || '📝';
+  if (!dateKey || !judul) { toast('Isi tanggal dan nama event!','warning'); return; }
+  if (!KALENDER_EVENTS[dateKey]) KALENDER_EVENTS[dateKey] = [];
+  KALENDER_EVENTS[dateKey].push({id: Date.now(), judul: judul, icon: icon});
+  kalSaveEvents();
+  closeKalModal();
+  // Sync bulan tampil ke bulan event yang baru disimpan
+  var parts = dateKey.split('-');
+  _kalTahun = parseInt(parts[0]);
+  _kalBulan = parseInt(parts[1]) - 1;
+  renderContent();
+  toast('Event berhasil ditambahkan! 📅','success');
+}
+
+function closeKalModal() {
+  var el = document.getElementById('kal-modal-wrap');
+  if (el) el.parentNode.removeChild(el);
+}
+
+function renderKalender() {
+  kalLoadEvents();
+  var isAdmin = currentUser && (currentUser.role==="admin" || currentUser.role==="pengajar");
+  var bulan = _kalBulan, tahun = _kalTahun;
+  var namaBulan = new Date(tahun, bulan).toLocaleDateString("id-ID",{month:"long", year:"numeric"});
+  var hariPertama = new Date(tahun, bulan, 1).getDay();
+  var totalHari   = new Date(tahun, bulan+1, 0).getDate();
+  var todayStr    = today();
+  var todayDate   = new Date().getDate();
+  var isCurrentMonth = (bulan === new Date().getMonth() && tahun === new Date().getFullYear());
+
+  // Header kalender + navigasi bulan
+  var html = '<div style="max-width:560px">';
+  html += '<div class="panel" style="margin-bottom:16px">';
+  html += '<div class="panel-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">';
+  html += '<span class="panel-title">📅 Kalender Akademik</span>';
+  html += '<div style="display:flex;align-items:center;gap:8px">';
+  html += '<button onclick="_kalBulan--;if(_kalBulan<0){_kalBulan=11;_kalTahun--;}renderContent()" style="width:32px;height:32px;border-radius:9px;background:var(--bg3);border:1.5px solid var(--border);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:.15s" title="Bulan Sebelumnya">‹</button>';
+  html += '<span style="font-weight:700;font-size:13px;color:var(--text);white-space:nowrap;min-width:110px;text-align:center">'+namaBulan+'</span>';
+  html += '<button onclick="_kalBulan++;if(_kalBulan>11){_kalBulan=0;_kalTahun++;}renderContent()" style="width:32px;height:32px;border-radius:9px;background:var(--bg3);border:1.5px solid var(--border);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:.15s" title="Bulan Berikutnya">›</button>';
+  if (!isCurrentMonth) html += '<button onclick="_kalBulan=new Date().getMonth();_kalTahun=new Date().getFullYear();renderContent()" style="padding:6px 10px;border-radius:9px;background:var(--em-light);border:1.5px solid var(--em2);font-size:11px;font-weight:700;color:var(--em-dark);cursor:pointer">Hari Ini</button>';
+  html += '</div></div>';
+  html += '<div class="panel-body">';
+
+  // Header hari
+  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px">';
+  ["Min","Sen","Sel","Rab","Kam","Jum","Sab"].forEach(function(h){
+    html += '<div style="text-align:center;font-size:10px;font-weight:700;color:var(--text4);padding:5px 0">'+h+'</div>';
+  });
+  html += '</div>';
+
+  // Grid tanggal
+  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">';
+  for (var e=0; e<hariPertama; e++) html += '<div></div>';
+  for (var d=1; d<=totalHari; d++) {
+    var dk   = kalKey(tahun, bulan, d);
+    var evs  = KALENDER_EVENTS[dk] || [];
+    var isToday = isCurrentMonth && d === todayDate;
+    html += '<div style="aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;'
+      +'background:'+(isToday?"linear-gradient(135deg,#059669,#10b981)":evs.length?"rgba(16,185,129,.12)":"var(--bg3)")+";"
+      +'border:'+(isToday?"2px solid #059669":evs.length?"1.5px solid rgba(16,185,129,.4)":"1px solid var(--border)")+";"
+      +'font-size:12px;font-weight:'+(isToday?"800":evs.length?"700":"500")+";"
+      +'color:'+(isToday?"#fff":evs.length?"var(--em-dark)":"var(--text3)")+";"
+      +'cursor:'+(isAdmin||evs.length?"pointer":"default")+';padding:3px;transition:.15s;position:relative"'
+      +' onmouseover="this.style.transform=\'scale(1.07)\'" onmouseout="this.style.transform=\'scale(1)\'"'
+      +(isAdmin?' onclick="kalShowAddModal(\''+dk+'\')"':'')
+      +'>'
+      +'<span>'+d+'</span>'
+      +(evs.length?'<span style="font-size:9px;margin-top:1px;line-height:1;max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+evs[0].icon+'</span>':'')
+      +(evs.length>1?'<span style="font-size:7px;background:var(--em);color:#fff;border-radius:4px;padding:0 3px">+'+( evs.length-1)+'</span>':'')
+      +'</div>';
+  }
+  html += '</div>';
+  html += '</div></div>';
+
+  // Daftar event bulan ini
+  var eventsThisMonth = [];
+  for (var dk2 in KALENDER_EVENTS) {
+    if (dk2.startsWith(tahun+"-"+String(bulan+1).padStart(2,"0")+"-")) {
+      var tgl2 = parseInt(dk2.split("-")[2]);
+      KALENDER_EVENTS[dk2].forEach(function(ev){
+        eventsThisMonth.push({tgl:tgl2, dk:dk2, ev:ev});
+      });
+    }
+  }
+  eventsThisMonth.sort(function(a,b){ return a.tgl - b.tgl; });
+
+  html += '<div class="panel"><div class="panel-header" style="display:flex;align-items:center;justify-content:space-between">';
+  html += '<span class="panel-title">📌 Event Bulan Ini</span>';
+  if (isAdmin) {
+    html += '<button onclick="kalShowAddModal(\''+kalKey(tahun,bulan,new Date().getDate())+'\')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;background:var(--em);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer">● 🗓️ Simpan & Publish</button>';
+  }
+  html += '</div><div class="panel-body" style="padding:12px">';
+  if (eventsThisMonth.length === 0) {
+    html += '<div class="empty-state" style="padding:24px"><div class="empty-icon">📭</div><div class="empty-title">Belum ada event bulan ini</div>'
+      +(isAdmin?'<div class="empty-sub">Klik tanggal di kalender untuk tambah event</div>':'')+'</div>';
+  } else {
+    eventsThisMonth.forEach(function(item){
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;background:var(--bg3);margin-bottom:8px">'
+        +'<div style="width:36px;height:36px;border-radius:10px;background:var(--em-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+item.ev.icon+'</div>'
+        +'<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;color:var(--text)">'+item.ev.judul+'</div>'
+        +'<div style="font-size:11px;color:var(--text3)">Tanggal '+item.tgl+' '+namaBulan+'</div></div>';
+      if (isAdmin) {
+        html += '<button onclick="if(confirm(\'Hapus event ini?\'))kalDeleteEvent(\''+item.dk+'\','+item.ev.id+')" '
+          +'style="width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.2);color:#ef4444;font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center" title="Hapus">🗑</button>';
+      }
+      html += '</div>';
+    });
+  }
+  html += '</div></div></div>';
+  return html;
 }
 
 // =====================================================================
@@ -3715,6 +3914,8 @@ MENU.admin.push({id:"kalender",icon:"&#x1F4C6;",label:"Kalender Akademik"});
 MENU.wali.push({id:"kalender",icon:"&#x1F4C6;",label:"Kalender Akademik"});
 MENU.pengajar.push({id:"kalender",icon:"&#x1F4C6;",label:"Kalender Akademik"});
 PAGE_TITLES["kalender"]="Kalender Akademik";
+MENU.admin.push({id:"pengumuman",icon:"&#x1F4E3;",label:"Pengumuman"});
+PAGE_TITLES["pengumuman"]="Pengumuman";
 
 // =====================================================================
 // REGISTER MENU BUKU PRESTASI
@@ -3744,6 +3945,7 @@ function renderContent() {
     case "riwayat":       el.innerHTML=renderRiwayat(); break;
     case "kalender":      el.innerHTML=renderKalender(); break;
     case "prestasi":      el.innerHTML=renderBukuPrestasi(); break;
+    case "pengumuman":    el.innerHTML=renderPengumuman(); break;
     default: el.innerHTML='<div style="text-align:center;padding:60px 20px"><div style="font-size:52px;margin-bottom:14px">&#x1F6A7;</div><div style="font-size:16px;font-weight:700;color:var(--text)">Halaman belum tersedia</div></div>';
   }
   updateFabVisibility();
@@ -4410,12 +4612,276 @@ function _hideLoading() {
 // Paksa hilang 2 detik — tidak bisa stuck
 setTimeout(_hideLoading, 2000);
 
+// =====================================================================
+// SISTEM PENGUMUMAN BERJALAN
+// =====================================================================
+var ANN_STORAGE_KEY = "pengumuman_list";
+var _annDismissed = false;
+
+function annLoad() {
+  try {
+    var raw = localStorage.getItem(ANN_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : annSeedDefault();
+  } catch(e) { return annSeedDefault(); }
+}
+
+function annSeedDefault() {
+  var list = [
+    {id:1, teks:"📣 Selamat datang di Buku Absen Ngaji Harian Digital TPQ!", aktif:true, prioritas:1},
+    {id:2, teks:"📅 Ujian Iqra akan dilaksanakan minggu ini — harap hadir tepat waktu!", aktif:true, prioritas:2},
+    {id:3, teks:"🌙 Jangan lupa absen ngaji di rumah setiap hari ya, santri! ✨", aktif:true, prioritas:3}
+  ];
+  try { localStorage.setItem(ANN_STORAGE_KEY, JSON.stringify(list)); } catch(e){}
+  return list;
+}
+
+function annSave(list) {
+  try { localStorage.setItem(ANN_STORAGE_KEY, JSON.stringify(list)); } catch(e){}
+}
+
+function annRenderBanner() {
+  var list = annLoad().filter(function(a){ return a.aktif; });
+  var banner = document.getElementById("ann-banner");
+  var scroll = document.getElementById("ann-scroll");
+  if (!banner || !scroll) return;
+  if (list.length === 0 || _annDismissed) {
+    banner.classList.add("hidden-banner"); return;
+  }
+  banner.classList.remove("hidden-banner");
+  var items = list.concat(list);
+  var html = items.map(function(a){
+    return '<span class="ann-item">'
+      +'<span class="ann-badge">INFO</span>'
+      +'<span>'+a.teks+'</span>'
+      +'<span class="ann-dot"></span>'
+      +'</span>';
+  }).join('');
+  scroll.innerHTML = html;
+  var totalChars = list.reduce(function(s,a){ return s + a.teks.length; }, 0);
+  scroll.style.animationDuration = Math.max(18, totalChars * 0.22) + "s";
+}
+
+function annDismiss() {
+  _annDismissed = true;
+  var banner = document.getElementById("ann-banner");
+  if (banner) banner.classList.add("hidden-banner");
+}
+
+function renderPengumuman() {
+  var list = annLoad();
+  var aktif = list.filter(function(a){ return a.aktif; });
+
+  var html = '<div style="max-width:620px;padding-bottom:20px">';
+
+  // ── Judul + 2 tombol utama ──
+  html += '<div style="margin-bottom:16px">';
+  html += '<div style="font-weight:800;font-size:17px;color:var(--text);margin-bottom:4px">📣 Kelola Pengumuman</div>';
+  html += '<div style="font-size:12px;color:var(--text3)">Pengumuman aktif berjalan sebagai banner di semua halaman</div>';
+  html += '</div>';
+
+  // ── Tombol Tambah + Publish ──
+  html += '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">';
+  html += '<button onclick="annShowAdd()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;border-radius:14px;background:var(--em);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,.35)">➕ Tambah Pengumuman Baru</button>';
+  html += '<button onclick="annPublish()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;border-radius:14px;background:linear-gradient(135deg,#065f46,#059669);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(5,150,105,.35)"><span style="width:8px;height:8px;border-radius:50%;background:#86efac;display:inline-block;animation:pulse 1.5s ease infinite"></span>🗓️ Simpan & Publish Sekarang</button>';
+  html += '</div>';
+
+  // ── Preview banner ──
+  html += '<div style="border-radius:14px;overflow:hidden;margin-bottom:18px;border:2px dashed var(--em2)">';
+  html += '<div style="padding:7px 12px;background:var(--em-light);font-size:11px;font-weight:700;color:var(--em-dark);letter-spacing:.3px">👁 PREVIEW BANNER BERJALAN</div>';
+  html += '<div style="background:linear-gradient(90deg,#065f46,#059669,#0d9488);height:38px;overflow:hidden;position:relative">';
+  if (aktif.length > 0) {
+    var dur = Math.max(18, aktif.reduce(function(s,a){return s+a.teks.length;},0)*0.22);
+    html += '<div style="display:flex;align-items:center;height:100%;overflow:hidden;white-space:nowrap">'
+      +'<div style="display:inline-flex;animation:annScroll '+dur+'s linear infinite">';
+    aktif.concat(aktif).forEach(function(a){
+      html += '<span style="display:inline-flex;align-items:center;gap:8px;padding:0 24px;font-size:12px;font-weight:600;color:#fff">'
+        +'<span style="font-size:10px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:1px 6px">INFO</span>'
+        + a.teks
+        +'<span style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);display:inline-block;flex-shrink:0"></span>'
+        +'</span>';
+    });
+    html += '</div></div>';
+  } else {
+    html += '<div style="display:flex;align-items:center;height:100%;padding:0 16px;font-size:12px;color:rgba(255,255,255,.5);font-style:italic">Tidak ada pengumuman aktif saat ini</div>';
+  }
+  html += '</div></div>';
+
+  // ── Daftar pengumuman ──
+  html += '<div class="panel">';
+  html += '<div class="panel-header"><span class="panel-title">📋 Daftar Pengumuman</span>'
+        +'<span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--em-light);color:var(--em-dark)">'+list.length+' total · '+aktif.length+' aktif</span>'
+        +'</div>';
+  html += '<div class="panel-body" style="padding:12px">';
+
+  if (list.length === 0) {
+    html += '<div class="empty-state" style="padding:36px 20px">'
+          +'<div class="empty-icon">📭</div>'
+          +'<div class="empty-title">Belum ada pengumuman</div>'
+          +'<div class="empty-sub">Klik "Tambah Pengumuman" di atas untuk mulai</div>'
+          +'<button onclick="annShowAdd()" style="margin-top:16px;padding:10px 24px;border-radius:12px;background:var(--em);color:#fff;font-size:13px;font-weight:700;border:none;cursor:pointer">➕ Buat Pengumuman Pertama</button>'
+          +'</div>';
+  } else {
+    list.forEach(function(a, idx) {
+      html += '<div style="border-radius:14px;background:var(--bg3);border:1.5px solid '+(a.aktif?'rgba(16,185,129,.35)':'var(--border)')+';margin-bottom:10px;overflow:hidden">';
+
+      // Baris atas: toggle + teks
+      html += '<div style="display:flex;align-items:flex-start;gap:10px;padding:14px 14px 10px">';
+
+      // Toggle switch
+      html += '<button onclick="annToggle('+a.id+')" title="'+(a.aktif?'Nonaktifkan':'Aktifkan')+'"'
+        +' style="width:44px;height:26px;min-width:44px;border-radius:13px;border:none;cursor:pointer;flex-shrink:0;margin-top:2px;background:'+(a.aktif?'var(--em)':'#9ca3af')+';position:relative;transition:.3s">'
+        +'<span style="position:absolute;top:4px;'+(a.aktif?'right:4px':'left:4px')+';width:18px;height:18px;border-radius:50%;background:#fff;display:block;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></span>'
+        +'</button>';
+
+      // Teks + badge status
+      html += '<div style="flex:1;min-width:0">';
+      html += '<div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.55;word-break:break-word;white-space:normal">'+a.teks+'</div>';
+      html += '<div style="margin-top:7px;display:flex;gap:7px;align-items:center;flex-wrap:wrap">';
+      html += '<span style="font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;'
+        +(a.aktif?'background:rgba(16,185,129,.15);color:#059669;border:1px solid rgba(16,185,129,.4)'
+                :'background:var(--bg);color:var(--text4);border:1px solid var(--border)')
+        +'">'+(a.aktif?'● Aktif':'○ Nonaktif')+'</span>';
+      html += '<span style="font-size:11px;color:var(--text4)">No. '+(idx+1)+'</span>';
+      html += '</div></div></div>';
+
+      // Baris bawah: tombol Edit + Hapus full width
+      html += '<div style="display:flex;gap:8px;padding:0 14px 12px">';
+      html += '<button onclick="annShowEdit('+a.id+')"'
+        +' style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:10px;background:rgba(59,130,246,.1);border:1.5px solid rgba(59,130,246,.3);color:#3b82f6;font-size:13px;font-weight:700;cursor:pointer">✏️ Edit</button>';
+      html += '<button onclick="annDelete('+a.id+')"'
+        +' style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:10px;background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.3);color:#ef4444;font-size:13px;font-weight:700;cursor:pointer">🗑️ Hapus</button>';
+      html += '</div>';
+
+      html += '</div>'; // end card
+    });
+  }
+
+  html += '</div></div></div>';
+  return html;
+}
+
+function annShowAdd() { closeAnnModal(); annOpenModal(null); }
+function annShowEdit(id) {
+  closeAnnModal();
+  var item = annLoad().find(function(a){ return a.id === id; });
+  if (item) annOpenModal(item);
+}
+
+function annOpenModal(item) {
+  // Hapus modal lama jika ada
+  var old = document.getElementById('ann-modal-wrap');
+  if (old) old.parentNode.removeChild(old);
+
+  var isEdit = !!item;
+  var wrap = document.createElement("div");
+  wrap.id = "ann-modal-wrap";
+  wrap.style.cssText = "position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px)";
+  wrap.onclick = function(e){ if(e.target===wrap) closeAnnModal(); };
+
+  wrap.innerHTML = '<div style="background:var(--bg2);border-radius:20px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;animation:scaleIn .2s ease forwards">'
+    // Header
+    +'<div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border)">'
+    +'<div style="font-weight:800;font-size:15px;color:var(--text)">'+(isEdit?'✏️ Edit Pengumuman':'➕ Tambah Pengumuman')+'</div>'
+    +'<button onclick="closeAnnModal()" style="width:32px;height:32px;border-radius:10px;background:var(--bg3);border:1.5px solid var(--border);color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>'
+    +'</div>'
+    // Body
+    +'<div style="padding:20px;display:flex;flex-direction:column;gap:16px">'
+    // Teks
+    +'<div>'
+    +'<label style="display:block;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;margin-bottom:6px">TEKS PENGUMUMAN</label>'
+    +'<textarea id="ann-teks" rows="4" maxlength="160" placeholder="Contoh: 📅 Ujian Iqra minggu ini, harap hadir tepat waktu!" style="width:100%;border-radius:12px;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:13px;padding:12px;resize:vertical;transition:.2s;outline:none" onfocus="this.style.borderColor=\'var(--em)\'" onblur="this.style.borderColor=\'var(--border)\'">'+(isEdit?item.teks:'')+'</textarea>'
+    +'<div style="text-align:right;font-size:11px;color:var(--text4);margin-top:4px"><span id="ann-char">'+(isEdit?item.teks.length:0)+'</span>/160</div>'
+    +'</div>'
+    // Status
+    +'<div>'
+    +'<label style="display:block;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;margin-bottom:6px">STATUS</label>'
+    +'<select id="ann-aktif" style="width:100%;border-radius:12px;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:13px;padding:11px 14px;cursor:pointer;outline:none">'
+    +'<option value="1"'+((!isEdit||item.aktif)?' selected':'')+'> ● Aktif — tampil di banner</option>'
+    +'<option value="0"'+((isEdit&&!item.aktif)?' selected':'')+'> ○ Nonaktif — tersembunyi</option>'
+    +'</select>'
+    +'</div>'
+    // Info
+    +'<div style="padding:11px 14px;border-radius:12px;background:var(--em-light);border:1px solid var(--em2);font-size:12px;color:var(--em-dark);line-height:1.6">'
+    +'💡 Pengumuman aktif langsung berjalan sebagai banner untuk semua pengguna yang login.'
+    +'</div>'
+    +'</div>'
+    // Footer
+    +'<div style="display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:var(--bg3)">'
+    +'<button onclick="closeAnnModal()" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer">Batal</button>'
+    +'<button onclick="annSaveModal('+(isEdit?item.id:'null')+')" style="flex:2;padding:11px;border-radius:12px;border:none;background:var(--em);color:#fff;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(5,150,105,.3)">💾 Simpan</button>'
+    +'</div>'
+    +'</div>';
+
+  document.body.appendChild(wrap);
+  var ta = document.getElementById('ann-teks');
+  var cc = document.getElementById('ann-char');
+  if (ta && cc) {
+    ta.addEventListener('input', function(){ cc.textContent = ta.value.length; });
+    setTimeout(function(){ ta.focus(); }, 100);
+  }
+}
+
+function annSaveModal(id) {
+  var teks  = (document.getElementById('ann-teks').value || '').trim();
+  var aktif = document.getElementById('ann-aktif').value === '1';
+  if (!teks) { toast('Isi teks pengumuman dulu!','warning'); return; }
+  var list = annLoad();
+  if (id === null) {
+    list.push({id:Date.now(), teks:teks, aktif:aktif, prioritas:list.length+1});
+    toast('Pengumuman ditambahkan! 📣','success');
+  } else {
+    var idx = list.findIndex(function(a){ return a.id === id; });
+    if (idx >= 0) { list[idx].teks = teks; list[idx].aktif = aktif; }
+    toast('Pengumuman diperbarui!','success');
+  }
+  annSave(list);
+  closeAnnModal();
+  _annDismissed = false;
+  annRenderBanner();
+  try { localStorage.setItem('ann_published_at', new Date().toISOString()); } catch(e){}
+  if (currentPage === 'pengumuman') renderContent();
+}
+
+function annToggle(id) {
+  var list = annLoad();
+  var idx = list.findIndex(function(a){ return a.id === id; });
+  if (idx >= 0) { list[idx].aktif = !list[idx].aktif; annSave(list); }
+  _annDismissed = false;
+  annRenderBanner();
+  renderContent();
+}
+
+function annDelete(id) {
+  if (!confirm('Hapus pengumuman ini?')) return;
+  annSave(annLoad().filter(function(a){ return a.id !== id; }));
+  annRenderBanner();
+  renderContent();
+  toast('Pengumuman dihapus','info');
+}
+
+function annPublish() {
+  var list = annLoad();
+  var aktif = list.filter(function(a){ return a.aktif; });
+  if (aktif.length === 0) { toast('Tidak ada pengumuman aktif untuk dipublikasi!','warning'); return; }
+  // Simpan timestamp publish
+  try { localStorage.setItem('ann_published_at', new Date().toISOString()); } catch(e){}
+  _annDismissed = false;
+  annRenderBanner();
+  toast('✅ '+aktif.length+' pengumuman berhasil dipublish!','success');
+  renderContent();
+}
+
+function closeAnnModal() {
+  var el = document.getElementById('ann-modal-wrap');
+  if (el) el.parentNode.removeChild(el);
+}
+
 window.addEventListener("DOMContentLoaded", function() {
   if (localStorage.getItem("dark")==="1") {
     isDark = true;
     document.body.classList.add("dark");
     var dt=document.getElementById("dark-toggle"); if(dt) dt.textContent="☀️";
-    var di=document.getElementById("dark-icon"); if(di) di.textContent="☀️";
+    var di=document.getElementById("dark-icon-topbar"); if(di) di.textContent="☀️";
   }
   var style=document.createElement("style");
   style.textContent=".app-form .form-input,.app-form .form-select,.app-form textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;color:var(--text);font-size:13px;width:100%;transition:.2s;font-family:var(--font);outline:none}"
