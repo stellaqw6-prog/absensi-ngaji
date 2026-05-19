@@ -3880,44 +3880,64 @@ function kalDeleteEvent(dateKey, eventId) {
   KALENDER_EVENTS[dateKey] = KALENDER_EVENTS[dateKey].filter(function(e){ return e.id !== eventId; });
   if (KALENDER_EVENTS[dateKey].length === 0) delete KALENDER_EVENTS[dateKey];
   kalSaveEvents();
+  closeKalModal();
   renderContent();
+  toast('Event dihapus','info');
 }
 
 function kalShowAddModal(dateKey) {
   var isAdmin = currentUser && (currentUser.role==="admin" || currentUser.role==="pengajar");
   if (!isAdmin) return;
-  var icons = ["📝","🏆","🎓","📊","🕌","🎉","⚠️","📅","🌙","🔔","📖","🎯"];
-  var html = '<div class="modal-overlay" id="kalModal" onclick="if(event.target.id===\'kalModal\')closeKalModal()">'
-    +'<div class="modal animate-scaleIn" style="max-width:340px">'
-    +'<div class="modal-header"><span class="modal-title">➕ Tambah Event</span><button class="modal-close" onclick="closeKalModal()">✕</button></div>'
-    +'<div class="modal-body">'
-    +'<div class="form-group"><label class="form-label">TANGGAL</label>'
-    +'<input class="form-input" id="kal-tanggal" type="date" value="'+dateKey+'"/></div>'
-    +'<div class="form-group"><label class="form-label">NAMA EVENT</label>'
-    +'<input class="form-input" id="kal-judul" type="text" placeholder="Contoh: Ujian Iqra..." maxlength="40"/></div>'
-    +'<div class="form-group"><label class="form-label">IKON</label>'
-    +'<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">'
-    +icons.map(function(ic){ return '<button type="button" class="icon-pick-btn" data-icon="'+ic+'" onclick="kalPickIcon(this)" style="width:38px;height:38px;border-radius:10px;font-size:20px;border:2px solid var(--border);background:var(--bg3);cursor:pointer;transition:.15s">'+ic+'</button>'; }).join('')
-    +'</div>'
-    +'<input type="hidden" id="kal-icon" value="📝"/>'
-    +'</div></div>'
-    +'<div class="modal-footer">'
-    +'<button class="btn-secondary" onclick="closeKalModal()">Batal</button>'
-    +'<button class="btn-primary" onclick="kalSaveEvent()">Simpan Event</button>'
-    +'</div></div></div>';
+  // Tutup modal lama jika ada
+  closeKalModal();
+  var icons = ["📝","🏆","🎓","📊","🕌","🎉","⚠️","📅","🌙","🔔","📖","🎯","📣","🏅","✅","❌"];
   var wrap = document.createElement("div");
   wrap.id = "kal-modal-wrap";
-  wrap.innerHTML = html;
+  wrap.style.cssText = "position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px)";
+  wrap.onclick = function(e){ if(e.target===wrap) closeKalModal(); };
+  wrap.innerHTML =
+    '<div style="background:var(--bg2);border-radius:20px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.4);overflow:hidden;animation:scaleIn .2s ease">'
+    // Header
+    +'<div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border)">'
+    +'<div style="font-weight:800;font-size:15px;color:var(--text)">📅 Tambah Event Kalender</div>'
+    +'<button onclick="closeKalModal()" style="width:32px;height:32px;border-radius:10px;background:var(--bg3);border:1.5px solid var(--border);color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>'
+    +'</div>'
+    // Body
+    +'<div style="padding:20px;display:flex;flex-direction:column;gap:14px">'
+    // Tanggal
+    +'<div><label style="display:block;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;margin-bottom:6px">TANGGAL</label>'
+    +'<input id="kal-tanggal" type="date" value="'+dateKey+'" style="width:100%;border-radius:12px;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:14px;padding:11px 14px;outline:none" onfocus="this.style.borderColor=\'var(--em)\'" onblur="this.style.borderColor=\'var(--border)\'"/></div>'
+    // Nama event
+    +'<div><label style="display:block;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;margin-bottom:6px">NAMA EVENT</label>'
+    +'<input id="kal-judul" type="text" placeholder="Contoh: Ujian Iqra, Wisuda Santri..." maxlength="50" style="width:100%;border-radius:12px;border:1.5px solid var(--border);background:var(--bg3);color:var(--text);font-family:var(--font);font-size:14px;padding:11px 14px;outline:none" onfocus="this.style.borderColor=\'var(--em)\'" onblur="this.style.borderColor=\'var(--border)\'"/></div>'
+    // Ikon
+    +'<div><label style="display:block;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">PILIH IKON</label>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:7px">'
+    +icons.map(function(ic,i){
+      return '<button type="button" onclick="kalPickIcon(this)" data-icon="'+ic+'"'
+        +' style="width:40px;height:40px;border-radius:10px;font-size:20px;'
+        +'border:2px solid '+(i===0?'var(--em)':'var(--border)')+';'
+        +'background:'+(i===0?'var(--em-light)':'var(--bg3)')+';'
+        +'cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center">'+ic+'</button>';
+    }).join('')
+    +'</div>'
+    +'<input type="hidden" id="kal-icon" value="'+icons[0]+'"/>'
+    +'</div></div>'
+    // Footer
+    +'<div style="display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:var(--bg3)">'
+    +'<button onclick="closeKalModal()" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer">Batal</button>'
+    +'<button onclick="kalSaveEvent()" style="flex:2;padding:11px;border-radius:12px;border:none;background:var(--em);color:#fff;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(5,150,105,.3)">💾 Simpan Event</button>'
+    +'</div>'
+    +'</div>';
   document.body.appendChild(wrap);
-  // Highlight default icon
-  setTimeout(function(){
-    var first = document.querySelector('.icon-pick-btn');
-    if(first) first.style.borderColor = 'var(--em)';
-  }, 50);
+  setTimeout(function(){ var el=document.getElementById('kal-judul'); if(el) el.focus(); }, 100);
 }
 
 function kalPickIcon(btn) {
-  document.querySelectorAll('.icon-pick-btn').forEach(function(b){ b.style.borderColor='var(--border)'; b.style.background='var(--bg3)'; });
+  var container = btn.parentNode;
+  container.querySelectorAll('button[data-icon]').forEach(function(b){
+    b.style.borderColor='var(--border)'; b.style.background='var(--bg3)';
+  });
   btn.style.borderColor = 'var(--em)';
   btn.style.background = 'var(--em-light)';
   document.getElementById('kal-icon').value = btn.dataset.icon;
@@ -4012,27 +4032,28 @@ function renderKalender() {
   }
   eventsThisMonth.sort(function(a,b){ return a.tgl - b.tgl; });
 
-  html += '<div class="panel"><div class="panel-header" style="display:flex;align-items:center;justify-content:space-between">';
+  html += '<div class="panel"><div class="panel-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px">';
   html += '<span class="panel-title">📌 Event Bulan Ini</span>';
   if (isAdmin) {
-    html += '<button onclick="kalShowAddModal(\''+kalKey(tahun,bulan,new Date().getDate())+'\')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;background:var(--em);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer">● 🗓️ Simpan & Publish</button>';
+    html += '<button onclick="kalShowAddModal(\''+kalKey(tahun,bulan,todayDate)+'\')" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;background:var(--em);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0">➕ Tambah Event</button>';
   }
   html += '</div><div class="panel-body" style="padding:12px">';
   if (eventsThisMonth.length === 0) {
     html += '<div class="empty-state" style="padding:24px"><div class="empty-icon">📭</div><div class="empty-title">Belum ada event bulan ini</div>'
-      +(isAdmin?'<div class="empty-sub">Klik tanggal di kalender untuk tambah event</div>':'')+'</div>';
+      +(isAdmin?'<div class="empty-sub">Klik tanggal di kalender atau tombol "Tambah Event" di atas</div>':'')+'</div>';
   } else {
     eventsThisMonth.forEach(function(item){
-      html += '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;background:var(--bg3);margin-bottom:8px">'
-        +'<div style="width:36px;height:36px;border-radius:10px;background:var(--em-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+item.ev.icon+'</div>'
-        +'<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;color:var(--text)">'+item.ev.judul+'</div>'
-        +'<div style="font-size:11px;color:var(--text3)">Tanggal '+item.tgl+' '+namaBulan+'</div></div>';
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--bg3);margin-bottom:8px;border:1px solid var(--border)">'
+        +'<div style="width:40px;height:40px;border-radius:12px;background:var(--em-light);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">'+item.ev.icon+'</div>'
+        +'<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+item.ev.judul+'</div>'
+        +'<div style="font-size:11px;color:var(--text3);margin-top:2px">📅 '+item.tgl+' '+namaBulan+'</div></div>';
       if (isAdmin) {
         html += '<button onclick="if(confirm(\'Hapus event ini?\'))kalDeleteEvent(\''+item.dk+'\','+item.ev.id+')" '
-          +'style="width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.2);color:#ef4444;font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center" title="Hapus">🗑</button>';
+          +'style="width:34px;height:34px;border-radius:10px;background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.25);color:#ef4444;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center" title="Hapus event">🗑️</button>';
       }
       html += '</div>';
     });
+
   }
   html += '</div></div></div>';
   return html;
