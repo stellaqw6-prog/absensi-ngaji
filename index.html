@@ -767,6 +767,172 @@ select,textarea{font-size:16px}
     </div>
   </div>
 
+  <!-- ===== BUKU PANDUAN ===== -->
+  <section id="panduan-section" style="padding:60px 24px;background:linear-gradient(180deg,var(--em-light) 0%,var(--bg2) 100%);border-top:2px solid var(--em2);border-bottom:2px solid var(--em2)">
+    <div style="max-width:900px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:36px">
+        <div style="display:inline-flex;width:70px;height:70px;border-radius:22px;align-items:center;justify-content:center;font-size:36px;margin-bottom:14px;background:linear-gradient(135deg,#065f46,#059669);box-shadow:0 8px 30px rgba(5,150,105,.3)">📚</div>
+        <h2 style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:6px">Buku Panduan Pengguna</h2>
+        <p style="color:var(--text3);font-size:14px">Pilih panduan sesuai peran Anda</p>
+      </div>
+
+      <!-- TAB SELECTOR -->
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:28px;flex-wrap:wrap">
+        <button id="tab-wali-btn" onclick="showPanduan('wali')" style="padding:12px 28px;border-radius:14px;font-weight:800;font-size:15px;border:2px solid var(--em);background:linear-gradient(135deg,#059669,#10b981);color:#fff;cursor:pointer;transition:.2s;box-shadow:0 4px 16px rgba(5,150,105,.3);font-family:var(--font)">
+          👨‍👧 Panduan Wali Santri
+        </button>
+        <button id="tab-pengajar-btn" onclick="showPanduan('pengajar')" style="padding:12px 28px;border-radius:14px;font-weight:800;font-size:15px;border:2px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;transition:.2s;font-family:var(--font)">
+          🧕 Panduan Pengajar
+        </button>
+      </div>
+
+      <!-- PANDUAN WALI -->
+      <div id="panduan-wali" style="display:block">
+        <div style="background:linear-gradient(135deg,rgba(5,150,105,.08),rgba(16,185,129,.03));border:1.5px solid var(--border2);border-radius:20px;padding:28px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+            <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#065f46,#059669);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">👨‍👧</div>
+            <div>
+              <div style="font-weight:800;font-size:18px;color:var(--text)">Panduan untuk Wali Santri</div>
+              <div style="font-size:13px;color:var(--text3);margin-top:2px">Orang tua / wali yang memiliki anak di TPQ</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <!-- Step 1 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">1</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">📝 Daftar Akun Wali</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Klik tombol <strong style="color:var(--em)">"Daftar Sekarang"</strong> di halaman ini, lalu pilih <strong>"Wali Santri"</strong>. Isi nama lengkap Anda, nomor WhatsApp, username, password, dan data anak (nama, umur, kelas ngaji). Setelah daftar, tunggu aktivasi dari Admin.</div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">2</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">🔐 Login & Masuk Dashboard</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Klik <strong style="color:var(--em)">"Mulai Sekarang"</strong>, pilih jabatan <strong>"Wali"</strong>, lalu masukkan username dan password yang Anda daftarkan. Setelah masuk, Anda akan melihat dashboard berisi info anak Anda.</div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">3</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">✅ Isi Absensi Rumah Harian</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Di menu <strong style="color:var(--em)">"Absensi Rumah"</strong>, isi laporan ngaji anak di rumah setiap hari. Pilih status hadir/tidak, tuliskan surat/materi yang dibaca, jam ngaji, dan catatan. Kirim sebelum deadline yang ditentukan Admin (biasanya malam hari).</div>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">4</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">📖 Pantau Buku Prestasi Anak</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Di menu <strong style="color:var(--em)">"Buku Prestasi"</strong>, lihat catatan hasil ngaji anak dari pengajar — meliputi materi/halaman yang dibaca, status Lulus (L) atau Tidak Lulus (TL), dan pesan dari ustadz/ustadzah.</div>
+              </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">5</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">📅 Lihat Jadwal & Riwayat</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Menu <strong style="color:var(--em)">"Jadwal"</strong> menampilkan jadwal ngaji anak sesuai kelasnya. Menu <strong style="color:var(--em)">"Riwayat"</strong> menampilkan semua laporan absensi yang pernah Anda kirim. Menu <strong style="color:var(--em)">"Profil"</strong> untuk ubah data akun.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips Box -->
+          <div style="margin-top:16px;padding:14px 16px;border-radius:14px;background:rgba(212,175,55,.08);border:1.5px solid rgba(212,175,55,.25)">
+            <div style="font-weight:700;font-size:13px;color:#92400e;margin-bottom:6px">💡 Tips Penting untuk Wali</div>
+            <ul style="margin:0;padding-left:18px;font-size:12px;color:#78350f;line-height:1.8">
+              <li>Isi absensi rumah setiap hari meski anak tidak ngaji (pilih "Tidak Hadir" dengan alasan)</li>
+              <li>Perhatikan pengumuman dari Admin yang muncul di banner atas</li>
+              <li>Jika ada masalah login, hubungi Admin via WhatsApp</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANDUAN PENGAJAR -->
+      <div id="panduan-pengajar" style="display:none">
+        <div style="background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(96,165,250,.03));border:1.5px solid rgba(37,99,235,.2);border-radius:20px;padding:28px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+            <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#1e3a8a,#2563eb);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">🧕</div>
+            <div>
+              <div style="font-weight:800;font-size:18px;color:var(--text)">Panduan untuk Pengajar</div>
+              <div style="font-size:13px;color:var(--text3);margin-top:2px">Ustadz / Ustadzah yang mengajar di TPQ</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <!-- Step 1 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">1</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">📝 Daftar / Login sebagai Pengajar</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Klik <strong style="color:#2563eb">"Daftar Sekarang"</strong> lalu pilih <strong>"Pengajar / Ustadz-Ustadzah"</strong>. Isi nama, WhatsApp, mata pelajaran, dan kelas yang diajar. Atau jika sudah punya akun, langsung login dengan memilih jabatan <strong>"Pengajar"</strong>.</div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">2</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">📋 Isi Absensi Kelas Harian</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Di menu <strong style="color:#2563eb">"Absensi Kelas"</strong>, pilih kelas yang Anda ajar hari ini. Tandai setiap santri dengan status: <strong>Hadir, Izin, Sakit, atau Alfa</strong>. Anda juga bisa memasukkan nilai (0–100) dan catatan perilaku untuk setiap santri.</div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">3</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">💾 Simpan & Publish ke Wali</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Setelah mengisi, klik <strong style="color:#2563eb">"Simpan Absensi"</strong> untuk menyimpan draft. Lalu klik <strong style="color:#7c3aed">"Publish ke Orang Tua / Wali"</strong> agar data kehadiran hari ini langsung terlihat oleh orang tua santri di akun mereka.</div>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">4</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">📖 Input Buku Prestasi Ngaji</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Di menu <strong style="color:#2563eb">"Input Prestasi"</strong>, pilih santri yang ingin dicatat. Masukkan tanggal, halaman/materi yang dibaca, status <strong>L (Lulus)</strong> atau <strong>TL (Tidak Lulus)</strong>, dan catatan opsional untuk orang tua. Data ini langsung bisa dilihat wali santri.</div>
+              </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--bg2);border-radius:14px;border:1px solid var(--border)">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;flex-shrink:0">5</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px">📊 Pantau Statistik & Jadwal</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.6">Menu <strong style="color:#2563eb">"Statistik"</strong> menampilkan grafik kehadiran dan nilai santri di kelas Anda. Menu <strong style="color:#2563eb">"Jadwal"</strong> menampilkan jadwal pelajaran yang berlaku. Dashboard utama menampilkan ringkasan santri hadir hari ini.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tips Box -->
+          <div style="margin-top:16px;padding:14px 16px;border-radius:14px;background:rgba(37,99,235,.06);border:1.5px solid rgba(37,99,235,.2)">
+            <div style="font-weight:700;font-size:13px;color:#1e3a8a;margin-bottom:6px">💡 Tips Penting untuk Pengajar</div>
+            <ul style="margin:0;padding-left:18px;font-size:12px;color:#1e40af;line-height:1.8">
+              <li>Isi absensi kelas setiap kali mengajar agar orang tua mendapat informasi terkini</li>
+              <li>Gunakan kolom catatan untuk sampaikan perkembangan santri kepada orang tua</li>
+              <li>Input buku prestasi setelah setiap sesi ngaji agar rekam jejak santri lengkap</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Panduan -->
+      <div style="text-align:center;margin-top:20px">
+        <button class="btn-hero-main g-em" onclick="showPage('login')" style="font-size:15px">🌙 Sudah Paham? Masuk Sekarang</button>
+      </div>
+    </div>
+  </section>
+
   <section class="features">
     <h2 class="section-title">Fitur Lengkap & Modern</h2>
     <p class="section-sub">Semua yang dibutuhkan dalam satu platform islami</p>
@@ -1694,22 +1860,24 @@ function renderDashAdmin() {
   var nilaiData = DEMO_ABSENSI_KELAS.filter(function(a){ return a.nilai != null; }).map(function(a){ return a.nilai; });
   var avgNilai = nilaiData.length ? Math.round(nilaiData.reduce(function(s,v){return s+v;},0)/nilaiData.length) : 0;
 
-  // Santri paling rajin: gabungan 3 kriteria
-  // - Kehadiran kelas (bobot 40%): hadir kelas × 4 poin
-  // - Kelulusan prestasi (bobot 35%): jumlah lulus buku prestasi × 7 poin
-  // - Rajin ngaji di rumah (bobot 25%): hadir rumah × 3 poin
+  // Santri paling rajin: gabungan 3 kriteria dengan persentase
   var santriHadir = DEMO_SANTRI.map(function(s){
-    var hadirKelas  = DEMO_ABSENSI_KELAS.filter(function(a){ return a.santriId===s.id && a.status==="hadir"; }).length;
+    var hadirKelas    = DEMO_ABSENSI_KELAS.filter(function(a){ return a.santriId===s.id && a.status==="hadir"; }).length;
+    var totalKelas    = DEMO_ABSENSI_KELAS.filter(function(a){ return a.santriId===s.id; }).length;
     var lulusPrestasi = DEMO_PRESTASI.filter(function(p){ return p.santriId===s.id && p.lulus; }).length;
-    var hadirRumah  = DEMO_ABSENSI_RUMAH.filter(function(a){ return a.santriId===s.id && a.hadir; }).length;
-    var totalPoin   = (hadirKelas * 4) + (lulusPrestasi * 7) + (hadirRumah * 3);
+    var totalPrestasiS= DEMO_PRESTASI.filter(function(p){ return p.santriId===s.id; }).length;
+    var hadirRumah    = DEMO_ABSENSI_RUMAH.filter(function(a){ return a.santriId===s.id && a.hadir; }).length;
+    var totalRumahS   = DEMO_ABSENSI_RUMAH.filter(function(a){ return a.santriId===s.id; }).length;
+    var pctKelas    = totalKelas    ? Math.round(hadirKelas/totalKelas*100)       : 0;
+    var pctPrestasi = totalPrestasiS? Math.round(lulusPrestasi/totalPrestasiS*100): 0;
+    var pctRumah    = totalRumahS   ? Math.round(hadirRumah/totalRumahS*100)      : 0;
+    var skorTotal   = Math.round(pctKelas*0.4 + pctPrestasi*0.35 + pctRumah*0.25);
     return Object.assign({},s,{
-      hadir: hadirKelas,
-      lulusPrestasi: lulusPrestasi,
-      hadirRumah: hadirRumah,
-      totalPoin: totalPoin
+      hadir: hadirKelas, lulusPrestasi: lulusPrestasi, hadirRumah: hadirRumah,
+      totalPoin: (hadirKelas*4)+(lulusPrestasi*7)+(hadirRumah*3),
+      pctKelas: pctKelas, pctPrestasi: pctPrestasi, pctRumah: pctRumah, skorTotal: skorTotal
     });
-  }).sort(function(a,b){return b.totalPoin-a.totalPoin;});
+  }).sort(function(a,b){return b.skorTotal-a.skorTotal;});
 
   return `
     <div class="greeting-card g-em" style="margin-bottom:20px">
@@ -1755,9 +1923,9 @@ function renderDashAdmin() {
           </div>
           <div class="panel-body">
             <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-              <span style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(5,150,105,.12);color:var(--em-dark);font-weight:700">🏫 Hadir Kelas ×4</span>
-              <span style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(37,99,235,.12);color:#1e3a8a;font-weight:700">📖 Lulus Prestasi ×7</span>
-              <span style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(217,119,6,.12);color:#78350f;font-weight:700">🏠 Rajin Rumah ×3</span>
+              <span style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(5,150,105,.12);color:var(--em-dark);font-weight:700">🏫 Hadir Kelas 40%</span>
+              <span style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(37,99,235,.12);color:#1e3a8a;font-weight:700">📖 Lulus Prestasi 35%</span>
+              <span style="font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(217,119,6,.12);color:#78350f;font-weight:700">🏠 Rajin Rumah 25%</span>
             </div>
             ${santriHadir.length === 0
               ? `<div style="text-align:center;padding:20px;color:var(--text4)">Belum ada data</div>`
@@ -1767,14 +1935,14 @@ function renderDashAdmin() {
                 <div style="flex:1;min-width:0">
                   <div style="font-weight:700;font-size:13px;color:var(--text)">${s.nama}</div>
                   <div style="font-size:10px;color:var(--text3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap">
-                    <span>🏫 ${s.hadir} kelas</span>
-                    <span>📖 ${s.lulusPrestasi} lulus</span>
-                    <span>🏠 ${s.hadirRumah} rumah</span>
+                    <span>🏫 ${s.pctKelas}%</span>
+                    <span>📖 ${s.pctPrestasi}%</span>
+                    <span>🏠 ${s.pctRumah}%</span>
                   </div>
                 </div>
                 <div style="text-align:right">
-                  <div style="font-size:18px;font-weight:800;color:${i===0?'#d4af37':i<=2?'var(--em2)':'var(--text3)'}">${s.totalPoin}</div>
-                  <div style="font-size:10px;color:var(--text4)">poin</div>
+                  <div style="font-size:18px;font-weight:800;color:${i===0?'#d4af37':i<=2?'var(--em2)':'var(--text3)'}">${s.skorTotal}%</div>
+                  <div style="font-size:10px;color:var(--text4)">skor rajin</div>
                 </div>
               </div>
             `).join("")}
@@ -2508,22 +2676,26 @@ function renderStatistik() {
 // RANKING
 // =====================================================================
 function renderRanking() {
-  // Hitung poin dari 3 kriteria utama:
-  // 1. Kehadiran kelas      → bobot 40% (×4 poin/hadir)
-  // 2. Kelulusan prestasi   → bobot 35% (×7 poin/lulus)
-  // 3. Rajin ngaji di rumah → bobot 25% (×3 poin/hadir)
+  // Hitung persentase dari 3 kriteria utama:
+  // 1. Kehadiran kelas      → bobot 40%
+  // 2. Kelulusan prestasi   → bobot 35%
+  // 3. Rajin ngaji di rumah → bobot 25%
   const ranked = DEMO_SANTRI.map(s=>{
-    var hadirKelas     = DEMO_ABSENSI_KELAS.filter(a=>a.santriId===s.id && a.status==="hadir").length;
-    var hadirRumah     = DEMO_ABSENSI_RUMAH.filter(a=>a.santriId===s.id && a.hadir).length;
-    var lulusPrestasi  = DEMO_PRESTASI.filter(p=>p.santriId===s.id && p.lulus).length;
-    var totalPrestasi  = DEMO_PRESTASI.filter(p=>p.santriId===s.id).length;
-    var poin = (hadirKelas * 4) + (lulusPrestasi * 7) + (hadirRumah * 3);
+    var hadirKelas      = DEMO_ABSENSI_KELAS.filter(a=>a.santriId===s.id && a.status==="hadir").length;
+    var totalKelas      = DEMO_ABSENSI_KELAS.filter(a=>a.santriId===s.id).length;
+    var hadirRumah      = DEMO_ABSENSI_RUMAH.filter(a=>a.santriId===s.id && a.hadir).length;
+    var totalRumah      = DEMO_ABSENSI_RUMAH.filter(a=>a.santriId===s.id).length;
+    var lulusPrestasi   = DEMO_PRESTASI.filter(p=>p.santriId===s.id && p.lulus).length;
+    var totalPrestasi   = DEMO_PRESTASI.filter(p=>p.santriId===s.id).length;
+    var pctKelas    = totalKelas    ? Math.round(hadirKelas/totalKelas*100)       : 0;
+    var pctRumah    = totalRumah    ? Math.round(hadirRumah/totalRumah*100)       : 0;
+    var pctPrestasi = totalPrestasi ? Math.round(lulusPrestasi/totalPrestasi*100) : 0;
+    var skorTotal   = Math.round(pctKelas*0.4 + pctPrestasi*0.35 + pctRumah*0.25);
     return Object.assign({},s,{
-      poin: poin,
-      hadirKelas: hadirKelas,
-      hadirRumah: hadirRumah,
-      lulusPrestasi: lulusPrestasi,
-      totalPrestasi: totalPrestasi
+      poin: skorTotal,
+      pctKelas: pctKelas, pctRumah: pctRumah, pctPrestasi: pctPrestasi,
+      hadirKelas: hadirKelas, hadirRumah: hadirRumah,
+      lulusPrestasi: lulusPrestasi, totalPrestasi: totalPrestasi
     });
   }).sort((a,b)=>b.poin-a.poin);
 
@@ -2534,9 +2706,9 @@ function renderRanking() {
       <div class="gc-title">🏆 Ranking Kerajinan Santri</div>
       <div class="gc-sub">Bulan ${new Date().toLocaleDateString("id-ID",{month:"long",year:"numeric"})}</div>
       <div class="gc-tags" style="margin-top:10px">
-        <span class="gc-tag">🏫 Hadir Kelas ×4</span>
-        <span class="gc-tag">📖 Lulus Prestasi ×7</span>
-        <span class="gc-tag">🏠 Rajin Rumah ×3</span>
+        <span class="gc-tag">🏫 Hadir Kelas 40%</span>
+        <span class="gc-tag">📖 Lulus Prestasi 35%</span>
+        <span class="gc-tag">🏠 Rajin Rumah 25%</span>
       </div>
     </div>
     ${ranked.map((s,i)=>`
@@ -2549,14 +2721,14 @@ function renderRanking() {
           <div class="rank-name">${s.nama}</div>
           <div class="rank-meta">${s.kelas}</div>
           <div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap">
-            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(5,150,105,.1);color:var(--em-dark);font-weight:600">🏫 ${s.hadirKelas} hadir</span>
-            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(37,99,235,.1);color:#1e3a8a;font-weight:600">📖 ${s.lulusPrestasi}/${s.totalPrestasi} lulus</span>
-            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(217,119,6,.1);color:#78350f;font-weight:600">🏠 ${s.hadirRumah} rumah</span>
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(5,150,105,.1);color:var(--em-dark);font-weight:600">🏫 ${s.pctKelas}%</span>
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(37,99,235,.1);color:#1e3a8a;font-weight:600">📖 ${s.pctPrestasi}%</span>
+            <span style="font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(217,119,6,.1);color:#78350f;font-weight:600">🏠 ${s.pctRumah}%</span>
           </div>
         </div>
         <div class="rank-pts">
-          <div class="rank-pts-num" style="color:${i===0?'#d4af37':i<=2?'var(--em2)':'var(--text3)'}">${s.poin}</div>
-          <div class="rank-pts-lbl">poin</div>
+          <div class="rank-pts-num" style="color:${i===0?'#d4af37':i<=2?'var(--em2)':'var(--text3)'}">${s.poin}%</div>
+          <div class="rank-pts-lbl">skor rajin</div>
         </div>
       </div>
     `).join("")}
@@ -2564,12 +2736,12 @@ function renderRanking() {
       <div class="panel-header"><span class="panel-title">📊 Sistem Penilaian Kerajinan</span></div>
       <div class="panel-body">
         <div style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6">
-          Ranking dihitung dari <strong style="color:var(--text)">3 kriteria utama</strong> yang mencerminkan kesungguhan belajar Al-Qur'an secara menyeluruh.
+          Ranking dihitung dari <strong style="color:var(--text)">3 kriteria utama</strong> berupa <strong style="color:var(--text)">persentase kerajinan</strong> yang mencerminkan kesungguhan belajar Al-Qur'an secara menyeluruh.
         </div>
         ${[
-          ["🏫","Hadir Kelas Ngaji","Kehadiran di kelas TPQ bersama ustadz/ustadzah","× 4 poin / hadir","rgba(5,150,105,.12)","var(--em-dark)","40%"],
-          ["📖","Lulus Ujian Prestasi","Kelulusan pada buku prestasi / simakan halaman","× 7 poin / lulus","rgba(37,99,235,.12)","#1e3a8a","35%"],
-          ["🏠","Rajin Ngaji di Rumah","Laporan ngaji mandiri harian dari wali santri","× 3 poin / hadir","rgba(217,119,6,.12)","#78350f","25%"]
+          ["🏫","Hadir Kelas Ngaji","Persentase kehadiran di kelas TPQ (hadir ÷ total pertemuan)","40% bobot","rgba(5,150,105,.12)","var(--em-dark)","40%"],
+          ["📖","Lulus Ujian Prestasi","Persentase lulus pada buku prestasi / simakan halaman","35% bobot","rgba(37,99,235,.12)","#1e3a8a","35%"],
+          ["🏠","Rajin Ngaji di Rumah","Persentase laporan hadir ngaji mandiri harian dari wali","25% bobot","rgba(217,119,6,.12)","#78350f","25%"]
         ].map(([ic,lb,desc,p,bg,clr,bobot])=>`
           <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;border-radius:12px;background:${bg};margin-bottom:8px">
             <span style="font-size:22px;width:32px;text-align:center;flex-shrink:0">${ic}</span>
@@ -3573,7 +3745,7 @@ function renderProfil() {
         <div class="profile-avatar g-em">🧒</div>
         <div class="profile-name">${santri.nama}</div>
         <div class="profile-role">${santri.kelas} · ${santri.umur} tahun</div>
-        <div class="stars">${"⭐".repeat(Math.min(5,Math.ceil(hadirKelas/Math.max(absensiKelas.length,1)*5)))}</div>
+        <div class="stars">${(()=>{var pct=absensiKelas.length?Math.round(hadirKelas/absensiKelas.length*100):0;return `<span style="font-size:22px;font-weight:900;color:var(--em2)">${pct}%</span><span style="font-size:12px;color:var(--text3);margin-left:4px">kehadiran kelas</span>`;})()} </div>
       </div>
       <div class="profile-info">
         ${[
@@ -5170,6 +5342,37 @@ function annPublish() {
 function closeAnnModal() {
   var el = document.getElementById('ann-modal-wrap');
   if (el) el.parentNode.removeChild(el);
+}
+
+function showPanduan(tab) {
+  var waliDiv = document.getElementById('panduan-wali');
+  var pengajarDiv = document.getElementById('panduan-pengajar');
+  var waliBtn = document.getElementById('tab-wali-btn');
+  var pengajarBtn = document.getElementById('tab-pengajar-btn');
+  if (!waliDiv || !pengajarDiv) return;
+  if (tab === 'wali') {
+    waliDiv.style.display = 'block';
+    pengajarDiv.style.display = 'none';
+    waliBtn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
+    waliBtn.style.color = '#fff';
+    waliBtn.style.border = '2px solid var(--em)';
+    waliBtn.style.boxShadow = '0 4px 16px rgba(5,150,105,.3)';
+    pengajarBtn.style.background = 'var(--bg3)';
+    pengajarBtn.style.color = 'var(--text2)';
+    pengajarBtn.style.border = '2px solid var(--border)';
+    pengajarBtn.style.boxShadow = 'none';
+  } else {
+    waliDiv.style.display = 'none';
+    pengajarDiv.style.display = 'block';
+    pengajarBtn.style.background = 'linear-gradient(135deg,#1e3a8a,#2563eb)';
+    pengajarBtn.style.color = '#fff';
+    pengajarBtn.style.border = '2px solid #2563eb';
+    pengajarBtn.style.boxShadow = '0 4px 16px rgba(37,99,235,.3)';
+    waliBtn.style.background = 'var(--bg3)';
+    waliBtn.style.color = 'var(--text2)';
+    waliBtn.style.border = '2px solid var(--border)';
+    waliBtn.style.boxShadow = 'none';
+  }
 }
 
 window.addEventListener("DOMContentLoaded", function() {
